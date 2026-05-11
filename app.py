@@ -204,6 +204,19 @@ if uploaded_file is not None:
         })
 
         st.bar_chart(df.set_index("Role"))
+            # ---------------- PIE CHART ---------------- #
+
+st.markdown("## 🥧 Skill Distribution")
+
+fig, ax = plt.subplots()
+
+ax.pie(
+    scores,
+    labels=roles,
+    autopct='%1.1f%%'
+)
+
+st.pyplot(fig)
 
         # ---------------- MISSING SKILLS ---------------- #
 
