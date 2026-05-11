@@ -3,4 +3,5 @@ pandas
 spacy
 PyPDF2
 fpdf
+matplotlib
 scikit-learn
