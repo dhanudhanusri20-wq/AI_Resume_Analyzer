@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 
+from fpdf import FPDF
 from resume_parser import extract_text_from_pdf
 from skill_extractor import extract_skills
 from job_matcher import match_jobs
