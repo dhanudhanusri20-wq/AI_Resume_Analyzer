@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
 import base64
-from src.parser.resume_parser import extract_text_from_pdf
-from src.nlp.skill_extractor import extract_skills
-from src.matcher.job_matcher import match_jobs
-from src.scoring.scoring import calculate_score
+from resume_parser import extract_text_from_pdf
+from skill_extractor import extract_skills
+from job_matcher import match_jobs
+from scoring import calculate_score
 
 # 🔥 Background Image Function
 def set_bg_image():
