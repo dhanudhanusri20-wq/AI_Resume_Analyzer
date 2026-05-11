@@ -1,24 +1,58 @@
-import json
+def match_jobs(skills):
 
-def load_job_roles():
-    with open("dataset/job_roles.json", "r") as file:
-        roles = json.load(file)
-    return roles
+    job_roles = {
 
+        "Python Developer": [
+            "python",
+            "sql",
+            "flask",
+            "django"
+        ],
 
-def match_jobs(user_skills):
-    roles = load_job_roles()
+        "Data Scientist": [
+            "python",
+            "machine learning",
+            "data science",
+            "power bi",
+            "excel"
+        ],
+
+        "Frontend Developer": [
+            "html",
+            "css",
+            "javascript",
+            "react"
+        ],
+
+        "Backend Developer": [
+            "python",
+            "sql",
+            "django",
+            "flask"
+        ]
+    }
+
     results = {}
 
-    for role, skills in roles.items():
-        matched = set(user_skills) & set(skills)
-        missing = set(skills) - set(user_skills)
+    for role, required_skills in job_roles.items():
 
-        score = (len(matched) / len(skills)) * 100
+        matched = []
+
+        missing = []
+
+        for skill in required_skills:
+
+            if skill.lower() in skills:
+                matched.append(skill)
+
+            else:
+                missing.append(skill)
+
+        score = int((len(matched) / len(required_skills)) * 100)
 
         results[role] = {
-            "score": round(score, 2),
-            "missing_skills": list(missing)
+            "score": score,
+            "missing_skills": missing
         }
 
     return results
