@@ -70,7 +70,7 @@ if uploaded_file is not None:
     # Loading effect
     with st.spinner("Analyzing resume..."):
         skills = extract_skills(text)
-        score = calculate_score(skills)
+        score = calculate_score(text, skills)
         job_matches = match_jobs(skills)
 
     # Handle empty case
