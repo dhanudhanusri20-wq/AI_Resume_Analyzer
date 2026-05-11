@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
 from fpdf import FPDF
 
 from resume_parser import extract_text_from_pdf
