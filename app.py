@@ -1,11 +1,67 @@
 import streamlit as st
 import pandas as pd
-
 from fpdf import FPDF
+
 from resume_parser import extract_text_from_pdf
 from skill_extractor import extract_skills
 from job_matcher import match_jobs
 from scoring import calculate_score
+
+# ---------------- PDF GENERATION ---------------- #
+
+def generate_pdf(skills, score, best_role):
+
+    pdf = FPDF()
+
+    pdf.add_page()
+
+    pdf.set_font("Arial", size=16)
+
+    pdf.cell(
+        200,
+        10,
+        txt="AI Resume Analysis Report",
+        ln=True,
+        align='C'
+    )
+
+    pdf.ln(10)
+
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(
+        200,
+        10,
+        txt=f"ATS Resume Score: {score}%",
+        ln=True
+    )
+
+    pdf.cell(
+        200,
+        10,
+        txt=f"Best Career Match: {best_role}",
+        ln=True
+    )
+
+    pdf.ln(10)
+
+    pdf.cell(
+        200,
+        10,
+        txt="Extracted Skills:",
+        ln=True
+    )
+
+    for skill in skills:
+
+        pdf.cell(
+            200,
+            10,
+            txt=f"- {skill}",
+            ln=True
+        )
+
+    pdf.output("resume_report.pdf")
 
 # ---------------- PAGE CONFIG ---------------- #
 
@@ -19,6 +75,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+
 .stApp {
     background-color: #0E1117;
     color: white;
@@ -31,6 +88,7 @@ section[data-testid="stSidebar"] {
 h1, h2, h3, h4, h5, h6, p, label, div {
     color: white;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -44,11 +102,12 @@ st.sidebar.info(
 )
 
 st.sidebar.markdown("### Features")
+
 st.sidebar.write("✅ Skill Extraction")
 st.sidebar.write("✅ ATS Resume Score")
 st.sidebar.write("✅ Job Matching")
 st.sidebar.write("✅ Missing Skills Detection")
-st.sidebar.write("✅ Career Suggestions")
+st.sidebar.write("✅ PDF Report Download")
 
 # ---------------- HEADER ---------------- #
 
@@ -58,7 +117,7 @@ st.markdown("### Get instant career insights from your resume")
 
 st.write(
     "Upload your resume to analyze skills, calculate ATS score, "
-    "and get suitable career recommendations."
+    "and get career recommendations."
 )
 
 # ---------------- FILE UPLOAD ---------------- #
@@ -68,7 +127,7 @@ uploaded_file = st.file_uploader(
     type=["pdf"]
 )
 
-# ---------------- MAIN LOGIC ---------------- #
+# ---------------- MAIN APP ---------------- #
 
 if uploaded_file is not None:
 
@@ -87,8 +146,7 @@ if uploaded_file is not None:
         # Job Matching
         job_matches = match_jobs(skills)
 
-    # ---------------- EMPTY SKILLS CHECK ---------------- #
-
+    # Empty Skill Check
     if not skills:
 
         st.error(
@@ -116,11 +174,13 @@ if uploaded_file is not None:
 
             st.success(f"{score}%")
 
-            # Resume Feedback
+            # Feedback
             if score >= 80:
                 st.success("Excellent Resume")
+
             elif score >= 60:
                 st.warning("Good Resume but can improve")
+
             else:
                 st.error("Resume needs improvement")
 
@@ -170,6 +230,19 @@ if uploaded_file is not None:
             f"{best_role} "
             f"({job_matches[best_role]['score']}% match)"
         )
+
+        # ---------------- PDF DOWNLOAD ---------------- #
+
+        generate_pdf(skills, score, best_role)
+
+        with open("resume_report.pdf", "rb") as file:
+
+            st.download_button(
+                label="📥 Download Report",
+                data=file,
+                file_name="resume_report.pdf",
+                mime="application/pdf"
+            )
 
         # ---------------- SUGGESTIONS ---------------- #
 
