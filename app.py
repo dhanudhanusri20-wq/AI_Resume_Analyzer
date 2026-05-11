@@ -7,30 +7,15 @@ from job_matcher import match_jobs
 from scoring import calculate_score
 
 # 🔥 Background Image Function
-def set_bg_image():
-    with open("assets/bg.jpg", "rb") as img_file:
-        encoded = base64.b64encode(img_file.read()).decode()
-
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/jpg;base64,{encoded}");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }}
-
-        .block-container {{
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border-radius: 12px;
-            color: white;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+st.set_page_config(...)
+    st.markdown("""
+<style>
+.stApp {
+    background-color: #0E1117;
+    color: white;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # 🔥 Page Config
 st.set_page_config(
