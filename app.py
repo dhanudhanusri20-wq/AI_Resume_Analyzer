@@ -2,11 +2,44 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from fpdf import FPDF
+import base64
 
 from resume_parser import extract_text_from_pdf
 from skill_extractor import extract_skills
 from job_matcher import match_jobs
 from scoring import calculate_score
+
+# ---------------- BACKGROUND IMAGE ---------------- #
+
+def set_bg():
+
+    with open("assets/bg.jpg", "rb") as file:
+        data = file.read()
+
+    encoded = base64.b64encode(data).decode()
+
+    page_bg = f"""
+    <style>
+
+    .stApp {{
+        background-image: url("data:image/jpg;base64,{encoded}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+
+    section[data-testid="stSidebar"] {{
+        background-color: rgba(0, 0, 0, 0.7);
+    }}
+
+    h1, h2, h3, h4, h5, h6, p, label, div {{
+        color: white;
+    }}
+
+    </style>
+    """
+
+    st.markdown(page_bg, unsafe_allow_html=True)
 
 # ---------------- PDF GENERATION ---------------- #
 
@@ -72,26 +105,9 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------- DARK THEME ---------------- #
+# ---------------- LOAD BACKGROUND ---------------- #
 
-st.markdown("""
-<style>
-
-.stApp {
-    background-color: #0E1117;
-    color: white;
-}
-
-section[data-testid="stSidebar"] {
-    background-color: #161B22;
-}
-
-h1, h2, h3, h4, h5, h6, p, label, div {
-    color: white;
-}
-
-</style>
-""", unsafe_allow_html=True)
+set_bg()
 
 # ---------------- SIDEBAR ---------------- #
 
