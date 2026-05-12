@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from fpdf import FPDF
 import base64
 
+from career_advisor import get_career_advice
 from resume_parser import extract_text_from_pdf
 from skill_extractor import extract_skills
 from job_matcher import match_jobs
@@ -64,6 +65,13 @@ def set_bg():
 
         </style>
         """, unsafe_allow_html=True)
+        # ---------------- AI CAREER ADVICE ---------------- #
+
+st.markdown("## 🤖 AI Career Advice")
+
+career_advice = get_career_advice(best_role)
+
+st.info(career_advice)
 
 # ---------------- PDF GENERATION ---------------- #
 
