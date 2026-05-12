@@ -249,6 +249,12 @@ if uploaded_file is not None:
 
     else:
 
+        # Best Role
+        best_role = max(
+            job_matches,
+            key=lambda x: job_matches[x]['score']
+        )
+
         # ---------------- TABS ---------------- #
 
         tab1, tab2, tab3, tab4 = st.tabs([
@@ -262,37 +268,45 @@ if uploaded_file is not None:
 
         with tab1:
 
-            col1, col2 = st.columns(2)
+            st.subheader("🧠 Extracted Skills")
 
-            with col1:
+            st.success(" | ".join(skills))
 
-                st.subheader("🧠 Extracted Skills")
+            st.subheader("📊 Resume Metrics")
 
-                st.success(" | ".join(skills))
+            m1, m2, m3 = st.columns(3)
 
-            with col2:
+            with m1:
+                st.metric(
+                    label="ATS Score",
+                    value=f"{score}%"
+                )
 
-                st.subheader("📊 ATS Resume Score")
+            with m2:
+                st.metric(
+                    label="Skills Found",
+                    value=len(skills)
+                )
 
-                st.progress(score)
+            with m3:
+                st.metric(
+                    label="Best Match",
+                    value=f"{job_matches[best_role]['score']}%"
+                )
 
-                st.success(f"{score}%")
+            st.progress(score)
 
-                if score >= 80:
-                    st.success("Excellent Resume")
+            # Resume Feedback
+            if score >= 80:
+                st.success("Excellent Resume")
 
-                elif score >= 60:
-                    st.warning("Good Resume but can improve")
+            elif score >= 60:
+                st.warning("Good Resume but can improve")
 
-                else:
-                    st.error("Resume needs improvement")
+            else:
+                st.error("Resume needs improvement")
 
             # Best Role
-            best_role = max(
-                job_matches,
-                key=lambda x: job_matches[x]['score']
-            )
-
             st.markdown("## 🎯 Best Career Match")
 
             st.success(
