@@ -175,7 +175,7 @@ if uploaded_file is not None:
 
             st.success(f"{score}%")
 
-            # Feedback
+            # Resume Feedback
             if score >= 80:
                 st.success("Excellent Resume")
 
@@ -204,19 +204,21 @@ if uploaded_file is not None:
         })
 
         st.bar_chart(df.set_index("Role"))
-               # ---------------- PIE CHART ---------------- #
 
-st.markdown("## 🥧 Skill Distribution")
+        # ---------------- PIE CHART ---------------- #
 
-fig, ax = plt.subplots()
+        st.markdown("## 🥧 Skill Distribution")
 
-ax.pie(
-    scores,
-    labels=roles,
-    autopct='%1.1f%%'
-)
+        fig, ax = plt.subplots()
 
-st.pyplot(fig)
+        ax.pie(
+            scores,
+            labels=roles,
+            autopct='%1.1f%%'
+        )
+
+        st.pyplot(fig)
+
         # ---------------- MISSING SKILLS ---------------- #
 
         st.markdown("## ⚠️ Missing Skills")
