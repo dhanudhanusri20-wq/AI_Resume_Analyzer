@@ -13,33 +13,57 @@ from scoring import calculate_score
 
 def set_bg():
 
-    with open("assets/bg.jpg", "rb") as file:
-        data = file.read()
+    try:
 
-    encoded = base64.b64encode(data).decode()
+        with open("assets/bg.jpg", "rb") as file:
 
-    page_bg = f"""
-    <style>
+            data = file.read()
 
-    .stApp {{
-        background-image: url("data:image/jpg;base64,{encoded}");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-    }}
+        encoded = base64.b64encode(data).decode()
 
-    section[data-testid="stSidebar"] {{
-        background-color: rgba(0, 0, 0, 0.7);
-    }}
+        page_bg = f"""
+        <style>
 
-    h1, h2, h3, h4, h5, h6, p, label, div {{
-        color: white;
-    }}
+        .stApp {{
+            background-image: url("data:image/jpg;base64,{encoded}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }}
 
-    </style>
-    """
+        section[data-testid="stSidebar"] {{
+            background-color: rgba(0, 0, 0, 0.7);
+        }}
 
-    st.markdown(page_bg, unsafe_allow_html=True)
+        h1, h2, h3, h4, h5, h6, p, label, div {{
+            color: white;
+        }}
+
+        </style>
+        """
+
+        st.markdown(page_bg, unsafe_allow_html=True)
+
+    except:
+
+        st.markdown("""
+        <style>
+
+        .stApp {
+            background-color: #0E1117;
+            color: white;
+        }
+
+        section[data-testid="stSidebar"] {
+            background-color: #161B22;
+        }
+
+        h1, h2, h3, h4, h5, h6, p, label, div {
+            color: white;
+        }
+
+        </style>
+        """, unsafe_allow_html=True)
 
 # ---------------- PDF GENERATION ---------------- #
 
@@ -125,6 +149,7 @@ st.sidebar.write("✅ ATS Resume Score")
 st.sidebar.write("✅ Job Matching")
 st.sidebar.write("✅ Missing Skills Detection")
 st.sidebar.write("✅ PDF Report Download")
+st.sidebar.write("✅ Resume Section Analysis")
 
 # ---------------- HEADER ---------------- #
 
@@ -247,6 +272,35 @@ if uploaded_file is not None:
                     f"{role}: "
                     f"{', '.join(data['missing_skills'][:5])}"
                 )
+
+        # ---------------- RESUME SECTION ANALYSIS ---------------- #
+
+        st.markdown("## 📑 Resume Section Analysis")
+
+        sections = {
+            "Education": ["education", "b.tech", "b.e", "mca", "mba"],
+            "Skills": ["skills"],
+            "Projects": ["project"],
+            "Experience": ["experience"],
+            "Internship": ["internship"]
+        }
+
+        for section, keywords in sections.items():
+
+            found = False
+
+            for keyword in keywords:
+
+                if keyword.lower() in text.lower():
+
+                    found = True
+                    break
+
+            if found:
+                st.success(f"✅ {section} section found")
+
+            else:
+                st.error(f"❌ {section} section missing")
 
         # ---------------- BEST ROLE ---------------- #
 
