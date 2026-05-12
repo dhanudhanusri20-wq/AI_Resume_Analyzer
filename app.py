@@ -65,6 +65,35 @@ def set_bg():
         </style>
         """, unsafe_allow_html=True)
 
+# ---------------- LOGIN SYSTEM ---------------- #
+
+def login():
+
+    st.title("🔐 Login Page")
+
+    username = st.text_input("Username")
+
+    password = st.text_input(
+        "Password",
+        type="password"
+    )
+
+    login_button = st.button("Login")
+
+    if login_button:
+
+        if username == "admin" and password == "1234":
+
+            st.session_state.logged_in = True
+
+            st.success("Login Successful")
+
+            st.rerun()
+
+        else:
+
+            st.error("Invalid Username or Password")
+
 # ---------------- PDF GENERATION ---------------- #
 
 def generate_pdf(skills, score, best_role):
@@ -133,6 +162,20 @@ st.set_page_config(
 
 set_bg()
 
+# ---------------- SESSION STATE ---------------- #
+
+if "logged_in" not in st.session_state:
+
+    st.session_state.logged_in = False
+
+# ---------------- LOGIN CHECK ---------------- #
+
+if not st.session_state.logged_in:
+
+    login()
+
+    st.stop()
+
 # ---------------- SIDEBAR ---------------- #
 
 st.sidebar.title("About")
@@ -151,6 +194,13 @@ st.sidebar.write("✅ Missing Skills Detection")
 st.sidebar.write("✅ PDF Report Download")
 st.sidebar.write("✅ Resume Section Analysis")
 st.sidebar.write("✅ AI Career Advice")
+
+# Logout Button
+if st.sidebar.button("Logout"):
+
+    st.session_state.logged_in = False
+
+    st.rerun()
 
 # ---------------- HEADER ---------------- #
 
@@ -228,7 +278,6 @@ if uploaded_file is not None:
 
                 st.success(f"{score}%")
 
-                # Resume Feedback
                 if score >= 80:
                     st.success("Excellent Resume")
 
