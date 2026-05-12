@@ -199,157 +199,169 @@ if uploaded_file is not None:
 
     else:
 
-        # ---------------- SKILLS + SCORE ---------------- #
+        # ---------------- TABS ---------------- #
 
-        col1, col2 = st.columns(2)
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "📊 Dashboard",
+            "📈 Charts",
+            "📑 Resume Analysis",
+            "🤖 Career Advice"
+        ])
 
-        with col1:
+        # ---------------- DASHBOARD TAB ---------------- #
 
-            st.subheader("🧠 Extracted Skills")
+        with tab1:
 
-            st.success(" | ".join(skills))
+            col1, col2 = st.columns(2)
 
-        with col2:
+            with col1:
 
-            st.subheader("📊 ATS Resume Score")
+                st.subheader("🧠 Extracted Skills")
 
-            st.progress(score)
+                st.success(" | ".join(skills))
 
-            st.success(f"{score}%")
+            with col2:
 
-            # Resume Feedback
-            if score >= 80:
-                st.success("Excellent Resume")
+                st.subheader("📊 ATS Resume Score")
 
-            elif score >= 60:
-                st.warning("Good Resume but can improve")
+                st.progress(score)
 
-            else:
-                st.error("Resume needs improvement")
+                st.success(f"{score}%")
 
-        # ---------------- JOB MATCH CHART ---------------- #
+                # Resume Feedback
+                if score >= 80:
+                    st.success("Excellent Resume")
 
-        st.markdown("## 📊 Job Match Analysis")
+                elif score >= 60:
+                    st.warning("Good Resume but can improve")
 
-        roles = []
-        scores = []
+                else:
+                    st.error("Resume needs improvement")
 
-        for role, data in job_matches.items():
-
-            roles.append(role)
-
-            scores.append(data['score'])
-
-        df = pd.DataFrame({
-            "Role": roles,
-            "Match %": scores
-        })
-
-        st.bar_chart(df.set_index("Role"))
-
-        # ---------------- PIE CHART ---------------- #
-
-        st.markdown("## 🥧 Skill Distribution")
-
-        fig, ax = plt.subplots()
-
-        ax.pie(
-            scores,
-            labels=roles,
-            autopct='%1.1f%%'
-        )
-
-        st.pyplot(fig)
-
-        # ---------------- MISSING SKILLS ---------------- #
-
-        st.markdown("## ⚠️ Missing Skills")
-
-        for role, data in job_matches.items():
-
-            if data['missing_skills']:
-
-                st.warning(
-                    f"{role}: "
-                    f"{', '.join(data['missing_skills'][:5])}"
-                )
-
-        # ---------------- RESUME SECTION ANALYSIS ---------------- #
-
-        st.markdown("## 📑 Resume Section Analysis")
-
-        sections = {
-            "Education": ["education", "b.tech", "b.e", "mca", "mba"],
-            "Skills": ["skills"],
-            "Projects": ["project"],
-            "Experience": ["experience"],
-            "Internship": ["internship"]
-        }
-
-        for section, keywords in sections.items():
-
-            found = False
-
-            for keyword in keywords:
-
-                if keyword.lower() in text.lower():
-
-                    found = True
-                    break
-
-            if found:
-                st.success(f"✅ {section} section found")
-
-            else:
-                st.error(f"❌ {section} section missing")
-
-        # ---------------- BEST ROLE ---------------- #
-
-        best_role = max(
-            job_matches,
-            key=lambda x: job_matches[x]['score']
-        )
-
-        st.markdown("## 🎯 Best Career Match")
-
-        st.success(
-            f"{best_role} "
-            f"({job_matches[best_role]['score']}% match)"
-        )
-
-        # ---------------- AI CAREER ADVICE ---------------- #
-
-        st.markdown("## 🤖 AI Career Advice")
-
-        career_advice = get_career_advice(best_role)
-
-        st.info(career_advice)
-
-        # ---------------- PDF DOWNLOAD ---------------- #
-
-        generate_pdf(skills, score, best_role)
-
-        with open("resume_report.pdf", "rb") as file:
-
-            st.download_button(
-                label="📥 Download Report",
-                data=file,
-                file_name="resume_report.pdf",
-                mime="application/pdf"
+            # Best Role
+            best_role = max(
+                job_matches,
+                key=lambda x: job_matches[x]['score']
             )
 
-        # ---------------- SUGGESTIONS ---------------- #
+            st.markdown("## 🎯 Best Career Match")
 
-        st.markdown("## 💡 Suggestions")
+            st.success(
+                f"{best_role} "
+                f"({job_matches[best_role]['score']}% match)"
+            )
 
-        for role, data in job_matches.items():
+        # ---------------- CHARTS TAB ---------------- #
 
-            if data["missing_skills"]:
+        with tab2:
 
-                st.info(
-                    f"For {role}, learn: "
-                    f"{', '.join(data['missing_skills'][:5])}"
+            st.markdown("## 📊 Job Match Analysis")
+
+            roles = []
+            scores = []
+
+            for role, data in job_matches.items():
+
+                roles.append(role)
+
+                scores.append(data['score'])
+
+            df = pd.DataFrame({
+                "Role": roles,
+                "Match %": scores
+            })
+
+            st.bar_chart(df.set_index("Role"))
+
+            # Pie Chart
+            st.markdown("## 🥧 Skill Distribution")
+
+            fig, ax = plt.subplots()
+
+            ax.pie(
+                scores,
+                labels=roles,
+                autopct='%1.1f%%'
+            )
+
+            st.pyplot(fig)
+
+        # ---------------- RESUME ANALYSIS TAB ---------------- #
+
+        with tab3:
+
+            st.markdown("## ⚠️ Missing Skills")
+
+            for role, data in job_matches.items():
+
+                if data['missing_skills']:
+
+                    st.warning(
+                        f"{role}: "
+                        f"{', '.join(data['missing_skills'][:5])}"
+                    )
+
+            # Resume Sections
+            st.markdown("## 📑 Resume Section Analysis")
+
+            sections = {
+                "Education": ["education", "b.tech", "b.e", "mca", "mba"],
+                "Skills": ["skills"],
+                "Projects": ["project"],
+                "Experience": ["experience"],
+                "Internship": ["internship"]
+            }
+
+            for section, keywords in sections.items():
+
+                found = False
+
+                for keyword in keywords:
+
+                    if keyword.lower() in text.lower():
+
+                        found = True
+                        break
+
+                if found:
+                    st.success(f"✅ {section} section found")
+
+                else:
+                    st.error(f"❌ {section} section missing")
+
+        # ---------------- CAREER ADVICE TAB ---------------- #
+
+        with tab4:
+
+            st.markdown("## 🤖 AI Career Advice")
+
+            career_advice = get_career_advice(best_role)
+
+            st.info(career_advice)
+
+            # PDF Download
+            generate_pdf(skills, score, best_role)
+
+            with open("resume_report.pdf", "rb") as file:
+
+                st.download_button(
+                    label="📥 Download Report",
+                    data=file,
+                    file_name="resume_report.pdf",
+                    mime="application/pdf"
                 )
+
+            # Suggestions
+            st.markdown("## 💡 Suggestions")
+
+            for role, data in job_matches.items():
+
+                if data["missing_skills"]:
+
+                    st.info(
+                        f"For {role}, learn: "
+                        f"{', '.join(data['missing_skills'][:5])}"
+                    )
 
 # ---------------- FOOTER ---------------- #
 
