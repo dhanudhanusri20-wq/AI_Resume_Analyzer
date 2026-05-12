@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 from fpdf import FPDF
 import base64
 
-from career_advisor import get_career_advice
 from resume_parser import extract_text_from_pdf
 from skill_extractor import extract_skills
 from job_matcher import match_jobs
 from scoring import calculate_score
+from career_advisor import get_career_advice
 
 # ---------------- BACKGROUND IMAGE ---------------- #
 
@@ -17,7 +17,6 @@ def set_bg():
     try:
 
         with open("assets/bg.jpg", "rb") as file:
-
             data = file.read()
 
         encoded = base64.b64encode(data).decode()
@@ -65,13 +64,6 @@ def set_bg():
 
         </style>
         """, unsafe_allow_html=True)
-        # ---------------- AI CAREER ADVICE ---------------- #
-
-st.markdown("## 🤖 AI Career Advice")
-
-career_advice = get_career_advice(best_role)
-
-st.info(career_advice)
 
 # ---------------- PDF GENERATION ---------------- #
 
@@ -158,6 +150,7 @@ st.sidebar.write("✅ Job Matching")
 st.sidebar.write("✅ Missing Skills Detection")
 st.sidebar.write("✅ PDF Report Download")
 st.sidebar.write("✅ Resume Section Analysis")
+st.sidebar.write("✅ AI Career Advice")
 
 # ---------------- HEADER ---------------- #
 
@@ -323,6 +316,14 @@ if uploaded_file is not None:
             f"{best_role} "
             f"({job_matches[best_role]['score']}% match)"
         )
+
+        # ---------------- AI CAREER ADVICE ---------------- #
+
+        st.markdown("## 🤖 AI Career Advice")
+
+        career_advice = get_career_advice(best_role)
+
+        st.info(career_advice)
 
         # ---------------- PDF DOWNLOAD ---------------- #
 
