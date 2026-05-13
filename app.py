@@ -7,8 +7,8 @@ import base64
 from resume_parser import extract_text_from_pdf
 from skill_extractor import extract_skills
 from job_matcher import match_jobs
-from scoring import calculate_score
 from career_advisor import get_career_advice
+from resume_feedback import analyze_resume
 
 # ---------------- BACKGROUND IMAGE ---------------- #
 
@@ -194,6 +194,8 @@ st.sidebar.write("✅ Missing Skills Detection")
 st.sidebar.write("✅ PDF Report Download")
 st.sidebar.write("✅ Resume Section Analysis")
 st.sidebar.write("✅ AI Career Advice")
+st.sidebar.write("✅ Resume Score Breakdown")
+st.sidebar.write("✅ Resume Improvement Tips")
 
 # Logout Button
 if st.sidebar.button("Logout"):
@@ -233,8 +235,8 @@ if uploaded_file is not None:
         # Skill Extraction
         skills = extract_skills(text)
 
-        # ATS Score
-        score = calculate_score(text, skills)
+        # Resume Analysis
+        breakdown, score, tips = analyze_resume(text, skills)
 
         # Job Matching
         job_matches = match_jobs(skills)
@@ -305,6 +307,13 @@ if uploaded_file is not None:
 
             else:
                 st.error("Resume needs improvement")
+
+            # Score Breakdown
+            st.markdown("## 📋 Score Breakdown")
+
+            for category, marks in breakdown.items():
+
+                st.write(f"{category}: {marks}")
 
             # Best Role
             st.markdown("## 🎯 Best Career Match")
@@ -391,6 +400,13 @@ if uploaded_file is not None:
 
                 else:
                     st.error(f"❌ {section} section missing")
+
+            # Resume Tips
+            st.markdown("## 💡 Resume Improvement Tips")
+
+            for tip in tips:
+
+                st.warning(tip)
 
         # ---------------- CAREER ADVICE TAB ---------------- #
 
