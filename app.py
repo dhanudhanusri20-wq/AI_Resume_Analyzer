@@ -9,6 +9,7 @@ from skill_extractor import extract_skills
 from job_matcher import match_jobs
 from career_advisor import get_career_advice
 from resume_feedback import analyze_resume
+from summary_generator import generate_summary
 
 # ---------------- BACKGROUND IMAGE ---------------- #
 
@@ -96,7 +97,7 @@ def login():
 
 # ---------------- PDF GENERATION ---------------- #
 
-def generate_pdf(skills, score, best_role):
+def generate_pdf(skills, score, best_role, summary):
 
     pdf = FPDF()
 
@@ -131,6 +132,14 @@ def generate_pdf(skills, score, best_role):
     )
 
     pdf.ln(10)
+
+    pdf.multi_cell(
+        0,
+        10,
+        txt=f"Resume Summary: {summary}"
+    )
+
+    pdf.ln(5)
 
     pdf.cell(
         200,
@@ -196,6 +205,7 @@ st.sidebar.write("✅ Resume Section Analysis")
 st.sidebar.write("✅ AI Career Advice")
 st.sidebar.write("✅ Resume Score Breakdown")
 st.sidebar.write("✅ Resume Improvement Tips")
+st.sidebar.write("✅ AI Resume Summary")
 
 # Logout Button
 if st.sidebar.button("Logout"):
@@ -255,6 +265,13 @@ if uploaded_file is not None:
         best_role = max(
             job_matches,
             key=lambda x: job_matches[x]['score']
+        )
+
+        # AI Summary
+        summary = generate_summary(
+            skills,
+            best_role,
+            score
         )
 
         # ---------------- TABS ---------------- #
@@ -322,6 +339,11 @@ if uploaded_file is not None:
                 f"{best_role} "
                 f"({job_matches[best_role]['score']}% match)"
             )
+
+            # Resume Summary
+            st.markdown("## 📝 Resume Summary")
+
+            st.info(summary)
 
         # ---------------- CHARTS TAB ---------------- #
 
@@ -419,7 +441,12 @@ if uploaded_file is not None:
             st.info(career_advice)
 
             # PDF Download
-            generate_pdf(skills, score, best_role)
+            generate_pdf(
+                skills,
+                score,
+                best_role,
+                summary
+            )
 
             with open("resume_report.pdf", "rb") as file:
 
