@@ -32,12 +32,106 @@ def set_bg():
             background-attachment: fixed;
         }}
 
+        /* Sidebar */
+
         section[data-testid="stSidebar"] {{
-            background-color: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
         }}
+
+        /* Text */
 
         h1, h2, h3, h4, h5, h6, p, label, div {{
             color: white;
+        }}
+
+        /* Main Container */
+
+        .block-container {{
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }}
+
+        /* Metric Cards */
+
+        [data-testid="stMetric"] {{
+            background: rgba(255, 255, 255, 0.12);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+        }}
+
+        [data-testid="stMetricLabel"] {{
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }}
+
+        [data-testid="stMetricValue"] {{
+            color: #00FFCC;
+            font-size: 30px;
+            font-weight: bold;
+        }}
+
+        /* Tabs */
+
+        .stTabs [data-baseweb="tab"] {{
+            font-size: 18px;
+            color: white;
+            padding: 10px;
+        }}
+
+        /* Buttons */
+
+        .stButton > button {{
+            background: linear-gradient(
+                90deg,
+                #00C9FF,
+                #92FE9D
+            );
+
+            color: black;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: bold;
+            transition: 0.3s;
+        }}
+
+        .stButton > button:hover {{
+            transform: scale(1.05);
+        }}
+
+        /* Download Button */
+
+        .stDownloadButton > button {{
+            background: linear-gradient(
+                90deg,
+                #fc466b,
+                #3f5efb
+            );
+
+            color: white;
+            border-radius: 10px;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+        }}
+
+        /* File Uploader */
+
+        [data-testid="stFileUploader"] {{
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 15px;
+        }}
+
+        /* Success Box */
+
+        .stAlert {{
+            border-radius: 12px;
         }}
 
         </style>
